@@ -1,6 +1,6 @@
-# React Node Core
+# Graphic arithmetic operations system
 
-This is a simple example how i solved a problem with graphic representation of logic operation
+This is a simple example how i solved a problem with graphic representation of arithmetic operation
  by using SVG and d3js library.
 
 This is only introduction to more advanced system which i plan to create.
