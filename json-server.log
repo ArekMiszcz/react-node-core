@@ -1,0 +1,149 @@
+
+  \{^_^}/ hi!
+
+  Loading ./db.json
+  Done
+
+  Resources
+  http://localhost:3000/nodes
+  http://localhost:3000/links
+
+  Home
+  http://localhost:3000
+
+  Type s + enter at any time to create a snapshot of the database
+
+  \{^_^}/ hi!
+
+  Loading ./db.json
+  Done
+
+  Resources
+  http://localhost:3000/nodes
+  http://localhost:3000/links
+
+  Home
+  http://localhost:3000
+
+  Type s + enter at any time to create a snapshot of the database
+events.js:183
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE 0.0.0.0:3000
+    at Object._errnoException (util.js:1022:11)
+    at _exceptionWithHostPort (util.js:1044:20)
+    at Server.setupListenHandle [as _listen2] (net.js:1351:14)
+    at listenInCluster (net.js:1392:12)
+    at doListen (net.js:1501:7)
+    at _combinedTickCallback (internal/process/next_tick.js:141:11)
+    at process._tickCallback (internal/process/next_tick.js:180:9)
+    at Function.Module.runMain (module.js:686:11)
+    at startup (bootstrap_node.js:187:16)
+    at bootstrap_node.js:608:3
+[0mGET /db [32m200 [0m2.743 ms - -[0m
+[0mGET /__rules [33m404 [0m2.936 ms - 2[0m
+[0mGET /db [32m200 [0m0.374 ms - -[0m
+[0mGET /__rules [33m404 [0m1.357 ms - 2[0m
+[0mGET /nodes [32m200 [0m5.701 ms - 993[0m
+[0mGET /links [32m200 [0m5.918 ms - -[0m
+[0mGET /nodes [32m200 [0m2.908 ms - 993[0m
+[0mGET /links [32m200 [0m3.355 ms - -[0m
+[0mGET /nodes [32m200 [0m2.809 ms - 993[0m
+[0mGET /links [32m200 [0m3.127 ms - -[0m
+[0mGET /nodes [32m200 [0m2.157 ms - 993[0m
+[0mGET /links [32m200 [0m3.636 ms - -[0m
+[0mGET /nodes [32m200 [0m2.989 ms - 993[0m
+[0mGET /links [32m200 [0m3.313 ms - -[0m
+[0mGET /nodes [32m200 [0m2.939 ms - 993[0m
+[0mGET /links [32m200 [0m3.421 ms - -[0m
+
+  \{^_^}/ hi!
+
+  Loading ./db.json
+  Done
+
+  Resources
+  http://localhost:3000/nodes
+  http://localhost:3000/links
+
+  Home
+  http://localhost:3000
+
+  Type s + enter at any time to create a snapshot of the database
+
+  \{^_^}/ hi!
+
+  Loading ./db.json
+  Done
+
+  Resources
+  http://localhost:3000/nodes
+  http://localhost:3000/links
+
+  Home
+  http://localhost:3000
+
+  Type s + enter at any time to create a snapshot of the database
+[0mGET /nodes [32m200 [0m8.750 ms - 993[0m
+[0mGET /links [32m200 [0m11.999 ms - -[0m
+
+  \{^_^}/ hi!
+
+  Loading ./db.json
+  Done
+
+  Resources
+  http://localhost:3000/nodes
+  http://localhost:3000/links
+
+  Home
+  http://localhost:3000
+
+  Type s + enter at any time to create a snapshot of the database
+
+  \{^_^}/ hi!
+
+  Loading ./db.json
+  Done
+
+  Resources
+  http://localhost:3000/nodes
+  http://localhost:3000/links
+
+  Home
+  http://localhost:3000
+
+  Type s + enter at any time to create a snapshot of the database
+
+  \{^_^}/ hi!
+
+  Loading ./db.json
+  Done
+
+  Resources
+  http://localhost:3000/nodes
+  http://localhost:3000/links
+
+  Home
+  http://localhost:3000
+
+  Type s + enter at any time to create a snapshot of the database
+[0mGET /nodes [36m304 [0m8.160 ms - -[0m
+[0mGET /links [36m304 [0m9.816 ms - -[0m
+
+  \{^_^}/ hi!
+
+  Loading ./db.json
+  Done
+
+  Resources
+  http://localhost:3000/nodes
+  http://localhost:3000/links
+
+  Home
+  http://localhost:3000
+
+  Type s + enter at any time to create a snapshot of the database
+[0mGET /nodes [36m304 [0m8.006 ms - -[0m
+[0mGET /links [36m304 [0m9.426 ms - -[0m
