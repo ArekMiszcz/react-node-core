@@ -23,8 +23,8 @@ class AppContainer extends Component {
 
     componentWillMount() {
         Promise.all([
-            fetch('http://localhost:3000/nodes').then(res => res.json()),
-            fetch('http://localhost:3000/links').then(res => res.json())
+            fetch(`${process.env.JSON_SERVER}/nodes`).then(res => res.json()),
+            fetch(`${process.env.JSON_SERVER}/links`).then(res => res.json())
         ]).then(results => {
             AppActions.initialize({
                 nodes: results[0],
