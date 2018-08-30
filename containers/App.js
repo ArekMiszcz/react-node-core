@@ -23,8 +23,20 @@ class AppContainer extends Component {
 
     componentWillMount() {
         Promise.all([
-            fetch(`${process.env.JSON_SERVER}/nodes`).then(res => res.json()),
-            fetch(`${process.env.JSON_SERVER}/links`).then(res => res.json())
+            fetch(`${JSON_SERVER}nodes`, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Basic ${BASIC_AUTH}`
+                }
+            }).then(res => res.json()),
+            fetch(`${JSON_SERVER}links`, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Basic ${BASIC_AUTH}`
+                }
+            }).then(res => res.json())
         ]).then(results => {
             AppActions.initialize({
                 nodes: results[0],

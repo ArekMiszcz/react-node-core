@@ -6,7 +6,11 @@ COPY package.json /usr/src/app/package.json
 RUN npm install --silent
 RUN npm install react-scripts@1.1.5 -g --silent
 COPY . /usr/src/app
-RUN npm run build
+
+ARG JSON_SERVER
+ARG BASIC_AUTH
+
+RUN JSON_SERVER=$JSON_SERVER BASIC_AUTH=$BASIC_AUTH npm run build
 
 EXPOSE 8080
 
