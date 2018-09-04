@@ -1,5 +1,4 @@
 import {ReduceStore} from 'flux/utils';
-import {EventEmitter} from "fbemitter";
 
 import AppDispatcher from './AppDispatcher';
 import AppActionsTypes from './AppActionTypes';
@@ -11,10 +10,9 @@ class AppStore extends ReduceStore {
     constructor() {
       super(AppDispatcher);
     }
-    
+
     getInitialState() {
         return {
-            eventEmitter: new EventEmitter(),
             nodes: [],
             links: []
         };

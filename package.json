@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "./node_modules/.bin/webpack-dev-server --config ./webpack/webpack.dev.config.js --mode development",
+    "predev": "json-server ./db.json &",
+    "dev": "./node_modules/.bin/webpack-dev-server --config ./webpack/webpack.dev.config.js --mode development --env.JSON_SERVER=http://localhost:3000/",
     "build": "./node_modules/.bin/webpack --config ./webpack/webpack.prod.config.js --mode production --env.JSON_SERVER=$JSON_SERVER --env.BASIC_AUTH=$BASIC_AUTH",
     "start": "node server.js"
   },

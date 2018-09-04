@@ -27,14 +27,14 @@ class AppContainer extends Component {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Authorization': `Basic ${BASIC_AUTH}`
+                    ...{ 'Authorization' : (BASIC_AUTH ? `Basic ${BASIC_AUTH}` : null)}
                 }
             }).then(res => res.json()),
             fetch(`${JSON_SERVER}links`, {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Authorization': `Basic ${BASIC_AUTH}`
+                    ...{ 'Authorization': (BASIC_AUTH ? `Basic ${BASIC_AUTH}` : null) }
                 }
             }).then(res => res.json())
         ]).then(results => {

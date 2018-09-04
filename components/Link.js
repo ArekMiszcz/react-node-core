@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import {isEmpty} from 'lodash/lang';
 import {has, get} from 'lodash/object';
 
+import EventEmitterClient from "./../clients/eventEmitterClient";
+
 import AppStore from "../data/AppStore";
 import Node from './Node/Node';
 import NodeActionTypes from "../data/NodeActionTypes";
@@ -11,7 +13,7 @@ import NodeActionTypes from "../data/NodeActionTypes";
 class Link extends Component {
     MOUNTED_FLAG = 1;
     CURVE_INCLINATION = 50;
-    
+
     constructor () {
         super();
 
@@ -29,8 +31,6 @@ class Link extends Component {
                 }
             }
         };
-
-        this.eventEmitter = AppStore.getState().eventEmitter;
     }
 
     render () {
@@ -43,7 +43,7 @@ class Link extends Component {
     }
 
     componentDidMount() {
-        this.eventEmitter.addListener(NodeActionTypes.UPDATE, data => {
+        EventEmitterClient.on(NodeActionTypes.UPDATE, data => {
             if (this.MOUNTED_FLAG) {
                 this.onElementUpdate(data);
             }
@@ -163,7 +163,7 @@ class Link extends Component {
             }
         });
 
-        this.eventEmitter.emit(NodeActionTypes.UPDATE);
+        EventEmitterClient.emit(NodeActionTypes.UPDATE);
     }
 
     updatePosition(data) {

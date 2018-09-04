@@ -3,7 +3,8 @@ import {select} from 'd3-selection';
 import PropTypes from 'prop-types';
 import {get} from 'lodash/object';
 
-import AppStore from './../../data/AppStore';
+import EventEmitterClient from "./../../clients/eventEmitterClient";
+
 import LinkActions from "../../data/LinkActions";
 import InputActions from "../../data/InputActions";
 import OutputActionTypes from "../../data/OutputActionTypes";
@@ -13,8 +14,6 @@ import './Input.less';
 class Input extends Component {
     constructor() {
         super();
-
-        this.eventEmitter = AppStore.getState().eventEmitter;
     }
 
     componentWillMount() {
@@ -32,7 +31,7 @@ class Input extends Component {
     }
 
     componentDidMount() {
-        this.eventEmitter.addListener(OutputActionTypes.SEND, data => {
+        EventEmitterClient.on(OutputActionTypes.SEND, data => {
             if (this.props.id === get(data, 'inputId')) {
                 InputActions.send(this, data.value);
             }

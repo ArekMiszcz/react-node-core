@@ -9,7 +9,8 @@ import Output from './Output';
 
 import './Node.less';
 
-import AppStore from './../../data/AppStore';
+import EventEmitterClient from "./../../clients/eventEmitterClient";
+
 import InputActionTypes from './../../data/InputActionTypes';
 import NodeActionTypes from './../../data/NodeActionTypes';
 import NodeActions from "../../data/NodeActions";
@@ -33,14 +34,12 @@ class Node extends Component {
             height: 0,
             value: {}
         };
-
-        this.eventEmitter = AppStore.getState().eventEmitter;
     }
 
     componentWillMount() {
         this.uniqueId = `node_${this.props.id}`;
 
-        this.eventEmitter.addListener(InputActionTypes.SEND, data => {
+        EventEmitterClient.on(InputActionTypes.SEND, data => {
             if (this.props.id === get(data, 'nodeId')) {
                 const state = {
                     ...this.state,
@@ -116,7 +115,7 @@ class Node extends Component {
 
                 this.setState({ x, y });
 
-                this.eventEmitter.emit(NodeActionTypes.UPDATE, {
+                EventEmitterClient.emit(NodeActionTypes.UPDATE, {
                     instance: this,
                     params: {
                         x, y
