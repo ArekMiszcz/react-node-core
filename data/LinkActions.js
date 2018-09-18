@@ -1,5 +1,8 @@
 'use strict';
 
+import EventEmitterClient from "./../clients/eventEmitterClient";
+
+import LinkActionTypes from './LinkActionTypes';
 import InputActionTypes from './InputActionTypes';
 import OutputActionTypes from './OutputActionTypes';
 import AppDispatcher from './AppDispatcher';
@@ -24,7 +27,7 @@ const Actions = {
                             y: input.props.node.state.y
                         }
                     },
-                    pin: {
+                    input: {
                         id: input.props.id
                     }
                 }
@@ -47,7 +50,7 @@ const Actions = {
                             y: input.props.node.state.y
                         }
                     },
-                    pin: {
+                    input: {
                         id: input.props.id
                     }
                 }
@@ -77,7 +80,7 @@ const Actions = {
                             y: output.props.node.state.y
                         }
                     },
-                    pin: {
+                    output: {
                         id: output.props.id
                     }
                 }
@@ -99,7 +102,7 @@ const Actions = {
                             y: output.props.node.state.y
                         }
                     },
-                    pin: {
+                    output: {
                         id: output.props.id
                     }
                 },
@@ -111,7 +114,21 @@ const Actions = {
                 links
             });
         }
-    }
+    },
+    removeLink: id => {
+        EventEmitterClient.emit(LinkActionTypes.DELETE, { 
+            linkId: id 
+        });
+
+        AppDispatcher.dispatch({
+            type: LinkActionTypes.DELETE,
+            id
+        });
+    },
+    createLink: link => AppDispatcher.dispatch({
+        type: LinkActionTypes.CREATE,
+        link
+    })
 };
 
 export default Actions;

@@ -1,21 +1,27 @@
 import React, {Component} from 'react';
-import {select} from 'd3-selection';
+import {select, event, mouse} from 'd3-selection';
 import PropTypes from 'prop-types';
 import {isEmpty} from 'lodash/lang';
 import {has, get} from 'lodash/object';
 
+import EventEmitterClient from "./../clients/eventEmitterClient";
+
 import AppStore from "../data/AppStore";
 import Node from './Node/Node';
 import NodeActionTypes from "../data/NodeActionTypes";
+import LinkActionTypes from "../data/LinkActionTypes";
+import ContextMenu from './Commons/ContextMenu';
+import LinkActions from '../data/LinkActions';
 
 class Link extends Component {
     MOUNTED_FLAG = 1;
     CURVE_INCLINATION = 50;
-    
+
     constructor () {
         super();
 
         this.state = {
+            isNew: true,
             begin: {
                 position: {
                     x: 0,
@@ -29,21 +35,29 @@ class Link extends Component {
                 }
             }
         };
+    }
 
-        this.eventEmitter = AppStore.getState().eventEmitter;
+    static getUniqueId() {
+        const links = AppStore.getState().links;
+
+        return Math.max(...links.map(link => link.id)) + 1;
     }
 
     render () {
+        const uniqueId = `link_${this.props.id}`;
+
         const d = `M${this.state.begin.position.x} ${this.state.begin.position.y} 
         C ${this.state.begin.position.x + this.CURVE_INCLINATION} ${this.state.begin.position.y + this.CURVE_INCLINATION}, 
         ${this.state.end.position.x - this.CURVE_INCLINATION} ${this.state.end.position.y - this.CURVE_INCLINATION}, 
         ${this.state.end.position.x} ${this.state.end.position.y}`;
 
-        return <path d={d} stroke="black" fill="transparent"/>;
+        return <path id={uniqueId} d={d} stroke="black" strokeWidth="2" fill="transparent"/>;
     }
 
     componentDidMount() {
-        this.eventEmitter.addListener(NodeActionTypes.UPDATE, data => {
+        const uniqueId = `#link_${this.props.id}`;
+        
+        EventEmitterClient.on(NodeActionTypes.UPDATE, data => {
             if (this.MOUNTED_FLAG) {
                 this.onElementUpdate(data);
             }
@@ -53,7 +67,7 @@ class Link extends Component {
 
         if (!isEmpty(this.props.begin)) {
             const beginD3Node = select(`#node_${this.props.begin.node.id}`);
-            const beginD3Pin = select(`#output_${this.props.begin.pin.id}`);
+            const beginD3Pin = select(`#output_${this.props.begin.output.id}`);
 
             newState = {
                 begin: {
@@ -69,7 +83,7 @@ class Link extends Component {
 
         if (!isEmpty(this.props.end)) {
             const endD3Node = select(`#node_${this.props.end.node.id}`);
-            const endD3Pin = select(`#input_${this.props.end.pin.id}`);
+            const endD3Pin = select(`#input_${this.props.end.input.id}`);
 
             newState = {
                 ...newState,
@@ -116,11 +130,36 @@ class Link extends Component {
                     this.setState(newState);
                 }
             };
-        } else this.setState(newState);
+        } else {
+            newState.isNew = false;
+
+            this.setState(newState);
+        };
+
+        const contextMenu = new ContextMenu([
+            {
+                text: 'Delete',
+                onClick: () => LinkActions.removeLink(this.props.id)
+            }
+        ]);
+
+        select(uniqueId).on('mouseover', function () {
+            select(this)
+                .style("stroke-width", "4px")
+                .style("cursor", "pointer");
+        }).on('mouseleave', function () {
+            select(this).style("stroke-width", "2px");
+        }).on('contextmenu', function () {
+            event.preventDefault();
+
+            const xy = mouse(this);
+
+            contextMenu.menu(xy[0], xy[1]);
+        });
     }
 
     componentWillReceiveProps(nextProps) {
-        if (get(nextProps, 'id') === 0 && has(nextProps, 'begin.node.id') && has(nextProps, 'end.node.id')) {
+        if (get(this.state, 'isNew') === true && has(nextProps, 'begin.node.id') && has(nextProps, 'end.node.id')) {
             this.makeLink(nextProps);
         }
     }
@@ -132,19 +171,13 @@ class Link extends Component {
     }
 
     makeLink(props) {
-        const links = AppStore.getState().links;
-        const index = links.findIndex(link => !link.id);
-
-        if (index !== -1) {
-            links[index].id = links.length;
-        }
-
         const beginD3Node = select(`#node_${props.begin.node.id}`);
-        const beginD3Pin = select(`#output_${props.begin.pin.id}`);
+        const beginD3Pin = select(`#output_${props.begin.output.id}`);
         const endD3Node = select(`#node_${props.end.node.id}`);
-        const endD3Pin = select(`#input_${props.end.pin.id}`);
+        const endD3Pin = select(`#input_${props.end.input.id}`);
 
         this.setState({
+            isNew: false,
             begin: {
                 d3Node: beginD3Node,
                 d3Pin: beginD3Pin,
@@ -163,7 +196,7 @@ class Link extends Component {
             }
         });
 
-        this.eventEmitter.emit(NodeActionTypes.UPDATE);
+        EventEmitterClient.emit(NodeActionTypes.UPDATE);
     }
 
     updatePosition(data) {
@@ -192,8 +225,7 @@ class Link extends Component {
 }
 
 Link.propTypes = {
-    id: PropTypes.number.isRequired,
-
+    id: PropTypes.number,
     begin: PropTypes.object,
     end: PropTypes.object
 };

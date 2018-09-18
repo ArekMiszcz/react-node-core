@@ -1,13 +1,12 @@
 'use strict';
 
+import EventEmitterClient from "./../clients/eventEmitterClient";
+
 import NodeActionTypes from './NodeActionTypes';
-import AppStore from "./AppStore";
 
 const Actions = {
   send(node, outputId, value) {
-      const eventEmitter = AppStore.getState().eventEmitter;
-
-      eventEmitter.emit(NodeActionTypes.SEND, {
+      EventEmitterClient.emit(NodeActionTypes.SEND, {
           outputId,
           value
       });

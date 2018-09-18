@@ -2,17 +2,22 @@ import React, {Component} from 'react';
 import {select, event} from 'd3-selection';
 import {drag} from 'd3-drag';
 import PropTypes from 'prop-types';
-import {get} from 'lodash/object';
+import {get, has} from 'lodash/object';
+import {head} from 'lodash/array';
+import {isEmpty} from 'lodash/lang';
 
 import Input from './Input';
 import Output from './Output';
 
 import './Node.less';
 
-import AppStore from './../../data/AppStore';
+import EventEmitterClient from "./../../clients/eventEmitterClient";
+
+import AppStore from "./../../data/AppStore";
 import InputActionTypes from './../../data/InputActionTypes';
 import NodeActionTypes from './../../data/NodeActionTypes';
 import NodeActions from "../../data/NodeActions";
+import LinkActionTypes from '../../data/LinkActionTypes';
 
 class Node extends Component {
     BODY_PADDING = 15;
@@ -33,14 +38,14 @@ class Node extends Component {
             height: 0,
             value: {}
         };
-
-        this.eventEmitter = AppStore.getState().eventEmitter;
     }
 
     componentWillMount() {
         this.uniqueId = `node_${this.props.id}`;
 
-        this.eventEmitter.addListener(InputActionTypes.SEND, data => {
+        
+
+        EventEmitterClient.on(InputActionTypes.SEND, data => {
             if (this.props.id === get(data, 'nodeId')) {
                 const state = {
                     ...this.state,
@@ -52,6 +57,32 @@ class Node extends Component {
 
                 this.setState(state);
                 this.onDataReceived(state.value);
+            }
+        });
+
+        EventEmitterClient.on(LinkActionTypes.DELETE, data => {
+            const linkId = data.linkId;
+            const link = head(AppStore.getState().links.filter(link => link.id === linkId));
+
+            if (!isEmpty(link)) {
+                let inputId;
+
+                if (has(link, 'begin.input.id') && link.begin.node.id === this.props.id) {
+                    inputId = link.begin.input.id;
+                }
+
+                if (has(link, 'end.input.id') && link.end.node.id === this.props.id) {
+                    inputId = link.end.input.id;
+                }
+
+                if (this.props.inputs.find(input => input.id === inputId)) {
+                    const state = this.state;
+
+                    delete state.value[inputId];
+    
+                    this.setState(state);
+                    this.onDataReceived(state.value);
+                }
             }
         });
     }
@@ -116,7 +147,7 @@ class Node extends Component {
 
                 this.setState({ x, y });
 
-                this.eventEmitter.emit(NodeActionTypes.UPDATE, {
+                EventEmitterClient.emit(NodeActionTypes.UPDATE, {
                     instance: this,
                     params: {
                         x, y

@@ -3,7 +3,8 @@ import {select} from 'd3-selection';
 import PropTypes from 'prop-types';
 import {get,has} from 'lodash/object';
 
-import AppStore from './../../data/AppStore';
+import EventEmitterClient from "./../../clients/eventEmitterClient";
+
 import NodeActionTypes from './../../data/NodeActionTypes';
 
 import OutputActions from './../../data/OutputActions';
@@ -14,8 +15,6 @@ import './Output.less';
 class Output extends Component {
     constructor() {
         super();
-
-        this.eventEmitter = AppStore.getState().eventEmitter;
     }
 
     componentWillMount() {
@@ -33,7 +32,7 @@ class Output extends Component {
     }
 
     componentDidMount() {
-        this.eventEmitter.addListener(NodeActionTypes.SEND, data => {
+        EventEmitterClient.on(NodeActionTypes.SEND, data => {
             if (this.props.id === get(data, 'outputId')) {
                 this.setState({
                     ...this.state,
@@ -44,7 +43,7 @@ class Output extends Component {
             }
         });
 
-        this.eventEmitter.addListener(NodeActionTypes.UPDATE, () => {
+        EventEmitterClient.on(NodeActionTypes.UPDATE, () => {
             if (has(this, 'state.value')) {
                 OutputActions.send(this, this.state.value);
             }
