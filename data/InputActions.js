@@ -1,6 +1,6 @@
 'use strict';
 
-import {has, isEmpty} from 'lodash';
+import {get, has, isEmpty} from 'lodash';
 
 import EventEmitterClient from "./../clients/eventEmitterClient";
 
@@ -11,12 +11,12 @@ const Actions = {
     send(input, value) {
         const appState = AppStore.getState();
         const links = appState.links.filter(link =>
-            has(link, 'end.pin.id') && has(link, 'begin.pin.id') && link.end.pin.id === input.props.id);
+            get(link, 'end.output.id') === input.props.id || get(link, 'begin.output.id') === input.props.id);
 
         if (!isEmpty(links)) {
             links.forEach(link => EventEmitterClient.emit(InputActionTypes.SEND, {
                 nodeId: link.end.node.id,
-                inputId: input.props.id,
+                inputId: has(link, 'end.input.id') ? link.end.input.id : link.begin.input.id,
                 value
             }));
         }

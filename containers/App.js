@@ -47,7 +47,13 @@ class AppContainer extends Component {
 
     render () {
         const nodes = this.state.app.nodes;
-        const links = this.state.app.links;
+        const links = this.state.app.links.map(link => {
+            if (!link.id) {
+                link.id = Link.getUniqueId();
+            }
+
+            return link;
+        });
 
         return <svg width="100%" weight="100%">
             <g className="nodes">
@@ -67,8 +73,8 @@ class AppContainer extends Component {
 
             <g className="links">
                 {
-                    links.map((link, key) =>
-                        <Link key={key}
+                    links.map(link =>
+                        <Link key={link.id}
                             id={link.id}
                             begin={link.begin}
                             end={link.end} />)
@@ -85,8 +91,8 @@ class AppContainer extends Component {
     }
 
     clearDidNotLinked() {
-        const links = this.state.app.links;
-        const index = links.findIndex(link => !link.id);
+        const links = AppStore.getState().links;
+        const index = links.findIndex(link => !link.begin || !link.end);
 
         if (index !== -1) {
             links.splice(index, 1);
